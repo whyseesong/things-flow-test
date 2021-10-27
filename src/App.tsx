@@ -1,10 +1,12 @@
-import React from "react";
+import React  from "react";
 import { BrowserRouter, Link, Switch, Route } from "react-router-dom";
 
 import { Octokit } from "octokit";
 import styled from "styled-components";
+import IssueList from "./components/IssueList/IssueList";
+import IssuePage from "./components/IssuePage/IssuePage";
 import Header from "./components/Header/Header";
-import { OctokitContext } from "./contexts/OctokitContext";
+import {OctokitContext} from "./contexts/OctokitContext";
 
 function App() {
   const AppWrapper = styled.div`
@@ -13,7 +15,7 @@ function App() {
     align-items: center;
   `;
 
-  const auth = "**";
+  const auth = process.env.REACT_APP_GITHUB_PERSONAL_API_KEY;
 
   return (
     <OctokitContext.Provider value={new Octokit({ auth })}>
@@ -23,12 +25,8 @@ function App() {
             <Header />
           </Link>
           <Switch>
-            <Route exact path={"/"}>
-                <Link to='/1'>1</Link>
-                <Link to='/2'>2</Link>
-                <Link to='/3'>3</Link>
-            </Route>
-            <Route path={"/:no"} children={<div>page</div>} />
+            <Route exact path={"/"} children={<IssueList />} />
+            <Route path={"/:no"} children={<IssuePage />} />
           </Switch>
         </AppWrapper>
       </BrowserRouter>
