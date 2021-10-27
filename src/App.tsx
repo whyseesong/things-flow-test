@@ -1,10 +1,15 @@
-import React from 'react';
+import React from "react";
+
+import { Octokit } from "octokit";
+import { OctokitContext } from "./contexts/OctokitContext";
 
 function App() {
+  const auth = "***";
+
   return (
-    <div className="App">
-      Aaa
-    </div>
+    <OctokitContext.Provider value={new Octokit({ auth })}>
+      {123}
+    </OctokitContext.Provider>
   );
 }
 
