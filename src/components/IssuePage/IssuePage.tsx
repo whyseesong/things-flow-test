@@ -1,6 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import useIssue from "./useIssue";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import Logo from "../Logo/Logo";
+import Loading from "../Loading/Loading";
 
 const IssuePage = () => {
   const { issue } = useIssue();
@@ -22,14 +26,22 @@ const IssuePage = () => {
     src: issue.profileUrl,
     rel: "profileImage",
   })`
-    width: 100px;
-    height: 100px;
+    width: 56px;
+    height: 56px;
+  `;
+  const PageContentSection = styled.section`
+    width: 80vw;
+  `;
+  const HorizontalLine = styled.hr`
+    width: 80vw;
   `;
 
-  return (
+  return issue.no === 0 ? (
+    <Loading />
+  ) : (
     <IssuePageWrapper>
       <PageHeaderSection>
-        <ProfileImage />
+        {issue.profileUrl === "" ? <Logo /> : <ProfileImage />}
         <div>
           <h3>
             <label>#{issue.no}</label>
@@ -42,9 +54,12 @@ const IssuePage = () => {
         </div>
         <div>코멘트 : {issue.comments}</div>
       </PageHeaderSection>
-      <section>
-        {issue.contents}
-      </section>
+      <HorizontalLine />
+      <PageContentSection>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {issue.contents}
+        </ReactMarkdown>
+      </PageContentSection>
     </IssuePageWrapper>
   );
 };
