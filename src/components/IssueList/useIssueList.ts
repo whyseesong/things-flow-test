@@ -1,5 +1,5 @@
 import useOctokit from "../../hooks/useOctokit";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type IssueType = {
   no: number;
@@ -14,15 +14,27 @@ const useIssueList = () => {
   const octokit = useOctokit();
   const [issues, setIssue] = useState<IssueType[]>([]);
   const [page, setPage] = useState(1);
+  const throttle = useRef(false);
 
   useEffect(() => {
-    document.addEventListener("scroll", () => {
+    const fetchTrigger = () => {
       const scrollRatio =
         (window.scrollY + window.innerHeight) / document.body.clientHeight;
-      if (scrollRatio >= 0.8) {
+      if (scrollRatio >= 0.8 && !throttle.current) {
         setPage((prev) => prev + 1);
+
+        // 요청 트리거 시 throttle true로 변경. 3초후에 원복
+        throttle.current = true;
+        setTimeout(() => {
+          throttle.current = false;
+        }, 3);
       }
-    });
+    };
+    document.addEventListener("scroll", fetchTrigger);
+
+    return () => {
+      document.removeEventListener("scroll", fetchTrigger);
+    };
   }, [setPage]);
 
   useEffect(() => {
