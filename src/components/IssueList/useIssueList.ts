@@ -1,7 +1,7 @@
 import useOctokit from "../../hooks/useOctokit";
 import { useEffect, useState } from "react";
 
-type IssueCard = {
+type IssueType = {
   no: number;
   title: string;
   author: string;
@@ -12,7 +12,7 @@ type IssueCard = {
 
 const useIssueList = () => {
   const octokit = useOctokit();
-  const [issues, setIssue] = useState<IssueCard[]>([]);
+  const [issues, setIssue] = useState<IssueType[]>([]);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
